@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where Coordination Pays</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --paper:#F7F8F9;
+    --surface:#FFFFFF;
+    --ink:#16191C;
+    --ink-2:#4A535D;
+    --ink-3:#7C858F;
+    --rule:#E3E6E9;
+    --rule-strong:#C9CED3;
+    --accent:#1B3A6B;
+    --accent-soft:#EDF1F7;
+    --ochre:#8A6A18;
+    --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --sans:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+    --mono:"IBM Plex Mono",Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#131518;
+      --surface:#191C20;
+      --ink:#E8EAED;
+      --ink-2:#A0A8B0;
+      --ink-3:#7B838C;
+      --rule:#2A2E33;
+      --rule-strong:#3A4046;
+      --accent:#8CA6DC;
+      --accent-soft:#1A2230;
+      --ochre:#C99A45;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#131518; --surface:#191C20; --ink:#E8EAED; --ink-2:#A0A8B0; --ink-3:#7B838C;
+    --rule:#2A2E33; --rule-strong:#3A4046; --accent:#8CA6DC; --accent-soft:#1A2230; --ochre:#C99A45;
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--serif);font-size:17px;line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:780px;margin:0 auto;padding:64px 28px 96px}
+  @media(max-width:640px){.wrap{padding:36px 20px 64px}}
+
+  p{max-width:66ch;margin:0 0 15px}
+  p:last-child{margin-bottom:0}
+  strong{font-weight:600}
+  em{font-style:italic}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--rule-strong)}
+  a:hover{border-bottom-color:var(--accent)}
+  a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .label{
+    font-family:var(--sans);font-size:10.5px;font-weight:600;
+    letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);
+  }
+
+  h1{
+    font-family:var(--serif);font-weight:600;font-size:clamp(1.95rem,4.4vw,2.55rem);
+    line-height:1.1;letter-spacing:-.012em;margin:10px 0 14px;text-wrap:balance;
+  }
+  .deck{font-size:1.14rem;line-height:1.52;color:var(--ink-2);max-width:60ch;margin:0}
+  .byline{
+    margin-top:22px;padding-top:13px;border-top:1px solid var(--rule-strong);
+    font-family:var(--sans);font-size:13px;color:var(--ink-3);
+    display:flex;flex-wrap:wrap;gap:4px 20px;
+  }
+  .byline b{color:var(--ink);font-weight:600}
+
+  .preamble{
+    margin:30px 0 0;padding:16px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  }
+  .preamble .label{display:block;margin-bottom:8px}
+  .preamble p{font-size:15px;line-height:1.58;color:var(--ink-2);max-width:68ch}
+
+  section{margin-top:46px}
+  .shead{border-bottom:1px solid var(--rule-strong);padding-bottom:7px;margin-bottom:16px}
+  .shead .label{display:block;color:var(--accent);margin-bottom:5px}
+  .shead h2{
+    font-family:var(--serif);font-weight:600;font-size:1.32rem;letter-spacing:-.008em;
+    margin:0;text-wrap:balance;
+  }
+  h3{font-family:var(--sans);font-weight:600;font-size:.95rem;margin:26px 0 8px;color:var(--ink)}
+
+  dl.opts{margin:18px 0 0;padding:0}
+  dl.opts > div{
+    display:grid;grid-template-columns:28px 1fr;gap:0 16px;
+    padding:15px 0;border-top:1px solid var(--rule);
+  }
+  dl.opts > div:last-child{border-bottom:1px solid var(--rule)}
+  dl.opts .key{
+    font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);
+    line-height:1.5;padding-top:2px;
+  }
+  dl.opts dt{font-family:var(--sans);font-weight:600;font-size:15.5px;margin:0 0 4px;line-height:1.4}
+  dl.opts dd{margin:0}
+  dl.opts dd p{font-size:15.5px;line-height:1.56;color:var(--ink-2);max-width:62ch;margin:0}
+  dl.opts > div.lead dt{color:var(--accent)}
+
+  .scroll{overflow-x:auto;margin:20px 0 0}
+  table{border-collapse:collapse;width:100%;min-width:600px;font-family:var(--sans)}
+  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--rule);font-size:13.5px}
+  thead th{
+    font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--ink-3);font-weight:600;border-bottom:1px solid var(--rule-strong);vertical-align:bottom;
+  }
+  td:first-child,th:first-child{padding-left:0}
+  td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+  tbody tr.lead td{font-weight:600;color:var(--ink)}
+  tbody tr.lead td.num{color:var(--accent)}
+  tbody tr:last-child td{border-bottom:1px solid var(--rule-strong)}
+  .tnote{
+    margin-top:9px;font-family:var(--sans);font-size:12.5px;line-height:1.5;
+    color:var(--ink-3);max-width:74ch;
+  }
+
+  figure{margin:20px 0 0}
+  figure svg{width:100%;height:auto;display:block}
+  figcaption{
+    margin-top:12px;font-family:var(--sans);font-size:12.5px;line-height:1.55;
+    color:var(--ink-3);max-width:74ch;
+  }
+  .dot{fill:var(--ink-3);transition:r .12s ease}
+  .dot:hover{r:9}
+  .dot.lead{fill:var(--accent)}
+  .dot.two{fill:var(--ochre)}
+  .lbl{font-family:var(--sans);font-size:12px;fill:var(--ink)}
+  .lbl .sc{font-family:var(--mono);fill:var(--ink-3)}
+  .ax{font-family:var(--mono);font-size:10px;fill:var(--ink-3)}
+  .axttl{font-family:var(--sans);font-size:11px;fill:var(--ink-3)}
+  .grid{stroke:var(--rule);stroke-width:1}
+  .axis{stroke:var(--rule-strong);stroke-width:1}
+
+  .finding{
+    background:var(--accent-soft);padding:22px 24px;margin:34px 0 0;
+    border-top:2px solid var(--accent);
+  }
+  .finding .label{display:block;color:var(--accent);margin-bottom:9px}
+  .finding p:first-of-type{
+    font-size:1.16rem;line-height:1.45;font-weight:600;max-width:56ch;margin-bottom:12px;
+  }
+  .finding p{font-size:15.5px;line-height:1.58;color:var(--ink-2);max-width:66ch}
+
+  ol.cruxes{counter-reset:c;list-style:none;padding:0;margin:18px 0 0}
+  ol.cruxes li{counter-increment:c;padding:15px 0;border-top:1px solid var(--rule)}
+  ol.cruxes li:last-child{border-bottom:1px solid var(--rule)}
+  ol.cruxes li::before{
+    content:"Crux " counter(c);display:block;font-family:var(--sans);font-size:10.5px;
+    font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;
+  }
+  ol.cruxes p{font-size:15.5px;line-height:1.56;max-width:64ch;margin:0}
+  ol.cruxes p+p{margin-top:7px;color:var(--ink-2);font-size:15px}
+  ol.cruxes b{font-weight:600}
+
+  ul.plain{padding-left:19px;margin:14px 0 0;max-width:66ch}
+  ul.plain li{margin:0 0 10px}
+  ul.plain li:last-child{margin-bottom:0}
+
+  footer{margin-top:52px;padding-top:16px;border-top:1px solid var(--rule-strong)}
+  footer p{
+    font-family:var(--sans);font-size:12.5px;line-height:1.6;color:var(--ink-3);max-width:78ch;
+  }
+  footer b{color:var(--ink-2);font-weight:600}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="label">A first run</span>
+  <h1>Where Coordination Pays</h1>
+  <p class="deck">Future Matters publishes a four-step method for prioritising policy work and calls it domain-agnostic. Every published application of it is climate. This runs it on US AI governance field coordination, and reaches a result the method does not obviously want.</p>
+  <div class="byline">
+    <span><b>Megi Pishtari</b></span>
+    <span>New York</span>
+    <span>2 September 2026</span>
+  </div>
+</header>
+
+<div class="preamble">
+  <span class="label">What this is, and is not</span>
+  <p>A first run of someone else's method on a question I do not have inside information about. Their own instruction applies: <em>"A first run rarely produces definitive answers; it reveals what you don't know."</em> The scores below are relative judgments, not measurements. The three cruxes at the end are where the ranking would actually be decided, and two of them are questions only the people inside those forums can answer.</p>
+  <p>Public information on the coordination forums is thin. I found no public member list or published output from them, so the options are drawn from the field's documented record rather than from what the forums are already doing, and any of them may already be underway.</p>
+</div>
+
+<section>
+  <div class="shead">
+    <span class="label">Step 1 &middot; Generate, research, eliminate</span>
+    <h2>The option set</h2>
+  </div>
+  <p>Six candidate interventions for a standing coordination function serving the US AI governance field. Each is here because the record shows a specific gap it addresses, and each survived a first cut that removed anything already provided by an existing convener or plainly outside a small team's reach.</p>
+
+  <dl class="opts">
+    <div class="lead">
+      <span class="key">C</span>
+      <div>
+        <dt>Structured position-mapping on the preemption trade</dt>
+        <dd><p>Confidential interviews across the field to establish where each organization actually stands on trading state-law preemption for a strong federal floor, then a synthesis the group can see. The fault line is live: one House sponsor has said she will preempt only alongside the strongest possible federal standard, while signatories to the June anti-preemption letter reject the development-versus-deployment distinction outright as illusory.</p></dd>
+      </div>
+    </div>
+    <div>
+      <span class="key">E</span>
+      <div>
+        <dt>A joint post-mortem practice on losses</dt>
+        <dd><p>A standing session that reviews defeats rather than wins. The field lost the NY-12 primary in June with roughly nineteen million dollars of aligned spending behind the author of the first state frontier-AI law, and saw Colorado's original AI Act stayed amid litigation and then repealed and replaced with a narrower framework in May. I did not find a public shared retrospective on either case.</p></dd>
+      </div>
+    </div>
+    <div>
+      <span class="key">B</span>
+      <div>
+        <dt>A pre-agreed escalation ladder for incidents</dt>
+        <dd><p>If-then commitments fixed before the next incident: what triggers a joint statement, who speaks, what each organization does in the first seventy-two hours. The July agent incident produced independent diagnosis across dozens of organizations and no agreed escalation path. The academic version of this proposal exists; I did not find a public example of one operating across the field.</p></dd>
+      </div>
+    </div>
+    <div>
+      <span class="key">A</span>
+      <div>
+        <dt>A standing horizon-scanning practice</dt>
+        <dd><p>A shared forward calendar and trigger list so foreseeable developments surface before the window opens rather than after. This is the option the field talks about most, and the one this role names explicitly.</p></dd>
+      </div>
+    </div>
+    <div>
+      <span class="key">F</span>
+      <div>
+        <dt>A shared map of who is in which room</dt>
+        <dd><p>A register of which organizations hold which congressional and agency relationships, to stop the field arriving at the same offices separately.</p></dd>
+      </div>
+    </div>
+    <div>
+      <span class="key">D</span>
+      <div>
+        <dt>A funding-disclosure norm for coalition members</dt>
+        <dd><p>Members disclose frontier-lab funding to each other. The case is recent and concrete: one lab put forty million dollars into a pro-regulation electoral vehicle, another funded a child-safety coalition that lost at least two members once the ties surfaced, and at least one advocacy organization refuses corporate money on principle.</p></dd>
+      </div>
+    </div>
+  </dl>
+</section>
+
+<section>
+  <div class="shead">
+    <span class="label">Steps 2 and 3 &middot; Rank separately, then score relative</span>
+    <h2>The criterion table</h2>
+  </div>
+  <p>Each criterion was ranked on its own before any option was compared overall, per the method's second step. Scores are relative within each column, with the strongest option set to 100. Effort is a cost, so it is scored as relative burden and divides the rest.</p>
+
+  <div class="scroll">
+  <table>
+    <thead>
+      <tr>
+        <th>Option</th>
+        <th class="num">Impact</th>
+        <th class="num">Feasibility</th>
+        <th class="num">Neglected&shy;ness</th>
+        <th class="num">Fit</th>
+        <th class="num">Effort</th>
+        <th class="num">Priority</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="lead"><td>C &middot; Position-mapping</td><td class="num">90</td><td class="num">95</td><td class="num">90</td><td class="num">100</td><td class="num">35</td><td class="num">100</td></tr>
+      <tr><td>E &middot; Loss post-mortems</td><td class="num">70</td><td class="num">80</td><td class="num">85</td><td class="num">90</td><td class="num">30</td><td class="num">65</td></tr>
+      <tr><td>B &middot; Escalation ladder</td><td class="num">100</td><td class="num">55</td><td class="num">100</td><td class="num">80</td><td class="num">70</td><td class="num">29</td></tr>
+      <tr><td>A &middot; Horizon scanning</td><td class="num">80</td><td class="num">100</td><td class="num">30</td><td class="num">95</td><td class="num">50</td><td class="num">21</td></tr>
+      <tr><td>F &middot; Relationship map</td><td class="num">55</td><td class="num">40</td><td class="num">80</td><td class="num">70</td><td class="num">60</td><td class="num">9</td></tr>
+      <tr><td>D &middot; Funding disclosure</td><td class="num">60</td><td class="num">30</td><td class="num">95</td><td class="num">45</td><td class="num">45</td><td class="num">8</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="tnote">Impact, Feasibility, Neglectedness and Fit: higher is better. Effort: higher is more costly. Priority = (Impact &times; Feasibility &times; Neglectedness &times; Fit) &divide; Effort, indexed to the top option.</p>
+
+  <h3>Where the scores come from</h3>
+  <ul class="plain">
+    <li><strong>Neglectedness is counterfactual</strong>, per the method: would this happen without the contribution? That is what puts horizon scanning at 30. The number is mine, not theirs, and it is the one the ranking is most sensitive to.</li>
+    <li><strong>Fit covers comparative advantage and institutional credibility.</strong> Position-mapping scores highest because Future Matters has already demonstrated the relevant capability: its own donor study interviewed twenty-two anonymous funders in confidence, mapped what they could and could not evaluate, and synthesised the result. That is the same instrument this option needs, pointed at a different set of parties. Funding disclosure scores 45 because running it turns the convener into a referee.</li>
+    <li><strong>Feasibility punishes pre-commitment.</strong> Getting thirty organizations to agree what they will each do in seventy-two hours is harder than getting them to describe where they stand, which is why the escalation ladder scores highest on impact and still lands third.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="shead">
+    <span class="label">Step 4 &middot; Counterfactual impact per unit of effort</span>
+    <h2>The plot</h2>
+  </div>
+
+  <figure>
+  <svg viewBox="0 0 720 420" role="img" aria-labelledby="pTitle pDesc">
+    <title id="pTitle">Six coordination options plotted by effort against combined impact</title>
+    <desc id="pDesc">Position-mapping sits furthest into the upper-left, most-efficient region. Full values are in the table above.</desc>
+
+    <g class="grid">
+      <line x1="64" y1="360" x2="700" y2="360"/>
+      <line x1="64" y1="283.6" x2="700" y2="283.6"/>
+      <line x1="64" y1="207.3" x2="700" y2="207.3"/>
+      <line x1="64" y1="130.9" x2="700" y2="130.9"/>
+      <line x1="64" y1="54.5" x2="700" y2="54.5"/>
+    </g>
+    <line class="axis" x1="64" y1="30" x2="64" y2="360"/>
+    <line class="axis" x1="64" y1="360" x2="700" y2="360"/>
+
+    <g class="ax" text-anchor="end">
+      <text x="56" y="364">0</text>
+      <text x="56" y="287.6">25</text>
+      <text x="56" y="211.3">50</text>
+      <text x="56" y="134.9">75</text>
+      <text x="56" y="58.5">100</text>
+    </g>
+    <g class="ax" text-anchor="middle">
+      <text x="64"  y="380">20</text>
+      <text x="170" y="380">30</text>
+      <text x="276" y="380">40</text>
+      <text x="382" y="380">50</text>
+      <text x="488" y="380">60</text>
+      <text x="594" y="380">70</text>
+      <text x="700" y="380">80</text>
+    </g>
+    <text class="axttl" x="382" y="404" text-anchor="middle">Relative effort (higher is more costly)</text>
+    <text class="axttl" x="16" y="195" text-anchor="middle" transform="rotate(-90 16 195)">Impact &times; Feasibility &times; Neglectedness &times; Fit (indexed, top = 100)</text>
+
+    <circle class="dot lead" cx="223" cy="54.5" r="7"><title>C, position-mapping. Impact 90, Feasibility 95, Neglectedness 90, Fit 100, Effort 35. Priority 100.</title></circle>
+    <circle class="dot two" cx="170" cy="189.9" r="7"><title>E, loss post-mortems. Impact 70, Feasibility 80, Neglectedness 85, Fit 90, Effort 30. Priority 65.</title></circle>
+    <circle class="dot" cx="594" cy="185.3" r="7"><title>B, escalation ladder. Impact 100, Feasibility 55, Neglectedness 100, Fit 80, Effort 70. Priority 29.</title></circle>
+    <circle class="dot" cx="382" cy="269.6" r="7"><title>A, horizon scanning. Impact 80, Feasibility 100, Neglectedness 30, Fit 95, Effort 50. Priority 21.</title></circle>
+    <circle class="dot" cx="488" cy="311.1" r="7"><title>F, relationship map. Impact 55, Feasibility 40, Neglectedness 80, Fit 70, Effort 60. Priority 9.</title></circle>
+    <circle class="dot" cx="329" cy="329.5" r="7"><title>D, funding disclosure. Impact 60, Feasibility 30, Neglectedness 95, Fit 45, Effort 45. Priority 8.</title></circle>
+
+    <g class="lbl">
+      <text x="236" y="58.5">C &middot; Position-mapping <tspan class="sc">100</tspan></text>
+      <text x="183" y="193.9">E &middot; Loss post-mortems <tspan class="sc">65</tspan></text>
+      <text x="581" y="189.3" text-anchor="end">B &middot; Escalation ladder <tspan class="sc">29</tspan></text>
+      <text x="395" y="273.6">A &middot; Horizon scanning <tspan class="sc">21</tspan></text>
+      <text x="475" y="315.1" text-anchor="end">F &middot; Relationship map <tspan class="sc">9</tspan></text>
+      <text x="342" y="333.5">D &middot; Funding disclosure <tspan class="sc">8</tspan></text>
+    </g>
+  </svg>
+  <figcaption>Effort on the horizontal, the product of the four benefit criteria on the vertical, per the method's fourth step: the upper-left region holds the most efficient opportunities. The vertical axis is indexed to the strongest option, so it carries no unit of its own. The number beside each label is the priority score.</figcaption>
+  </figure>
+
+  <div class="finding">
+    <span class="label">The finding</span>
+    <p>The option named most explicitly in the role scores fourth of six in this first-pass application of Future Matters' method.</p>
+    <p>Horizon scanning ranks highest on feasibility and near the top on fit. It falls to fourth largely because I assign it low counterfactual neglectedness: the role already assigns horizon scanning to this program, so I treat it as less counterfactually neglected than interventions nobody has named. The two options that clear it are cheaper, and both produce a written artifact the field does not currently have. The escalation ladder scores highest on raw impact and third overall, because pre-commitment is the hardest thing to ask of organizations that have not yet agreed what they disagree about.</p>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><h2>Recommendation</h2></div>
+
+  <p><strong>Run position-mapping first, this quarter, and stand up loss post-mortems alongside it as the cheap recurring practice.</strong> Treat the escalation ladder as what those two earn the standing to attempt, not as a starting move.</p>
+
+  <p>The sequencing argument is the whole recommendation. An escalation ladder asks thirty organizations to pre-commit to joint action. A position map asks them to describe, in confidence, where they already stand. The second is a precondition for the first: you cannot pre-agree a response with parties whose real disagreements have never been written down, and the documented failure mode of this field is not an absence of coordination but joint output weaker than any member's private position.</p>
+
+  <p>Foresight is not what is being deprioritised here. A shared scan that surfaces a development early is only useful to a group that has already settled what it would decide and who decides it. Broad agreement that a development matters is not a decision about it. That is the sense in which position-mapping sits upstream of the scanning: it produces the decision boundaries the scan needs in order to trigger anything.</p>
+
+  <p>Position-mapping is also the only option here that is time-critical. The federal preemption vehicle is a live discussion draft, and a map delivered after it moves is a history.</p>
+
+  <p>Per the method's own caution against betting everything on a single priority: this is a portfolio of two now and one later, not a single pick.</p>
+</section>
+
+<section>
+  <div class="shead"><h2>Cruxes</h2></div>
+  <p>Three questions decide this, ranked by how much they would move the answer. Each has a cheap test.</p>
+
+  <ol class="cruxes">
+    <li>
+      <p><b>Do private positions on the preemption trade actually differ from public ones?</b> If the thirty organizations already know where each other stands, the map is redundant and position-mapping collapses toward the bottom of the table.</p>
+      <p><b>Cheapest test:</b> ask five members to predict three named peers' positions on the trade. If the predictions agree with each other and with the peers, stop. Half a day.</p>
+    </li>
+    <li>
+      <p><b>Is horizon scanning genuinely going to happen without this choice?</b> The 30 I assigned to its neglectedness is the single most load-bearing number in the table and the one I am least entitled to. If it would not happen otherwise, its score more than triples.</p>
+      <p><b>Cheapest test:</b> a question, not an analysis. Ask whether a forward calendar already exists in any form across the forums.</p>
+    </li>
+    <li>
+      <p><b>Can position-mapping be run safely?</b> Collecting positions on live federal legislation across thirty organizations spanning different tax statuses raises disclosure questions and, if the map is ever shared beyond the group, questions about coordinated conduct.</p>
+      <p><b>Cheapest test:</b> one conversation with counsel before the first interview, and a decision up front about whether the synthesis is attributed, anonymised, or aggregate only.</p>
+    </li>
+  </ol>
+</section>
+
+<section>
+  <div class="shead"><h2>Sensitivity, and what would make me drop this</h2></div>
+  <ul class="plain">
+    <li>Moving horizon scanning's neglectedness to its most favourable value (100, meaning it would not happen otherwise) raises it from fourth to second, ahead of loss post-mortems. It still does not overtake position-mapping, which is a third cheaper and scores higher on fit.</li>
+    <li>Moving position-mapping's feasibility to its pessimistic end (55, if members will not speak candidly to a convener they do not yet trust) drops it to roughly the level of loss post-mortems. The recommendation then becomes: run post-mortems first and earn the candour.</li>
+    <li>No single parameter moved to its pessimistic end puts the funding-disclosure norm or the relationship map in contention. Those two are last for structural reasons, not close calls.</li>
+    <li><strong>What would make me withdraw the recommendation:</strong> the federal preemption draft dying or being introduced in substantially altered form before the map is finished. That removes the time-criticality that justifies running it first, and loss post-mortems become the lead.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="shead"><h2>Limitations</h2></div>
+  <ul class="plain">
+    <li>The option set is drawn from the field's public record, not from the forums' actual agendas. Any of these six may already be underway, which would change every neglectedness score in the table.</li>
+    <li>Scores are relative judgments by one person. The method's second step calls for ranking each criterion separately and then reaching consensus. There was no group here, so the consensus step is missing and the numbers should be read as a starting position to argue with.</li>
+    <li>I have no visibility into the forums' membership, so fit is assessed against Future Matters' published method and demonstrated capability rather than against what members would actually accept.</li>
+    <li>Every omission I can identify biases the result the same way: toward options that produce a written artifact, because those are the ones whose value I can see from outside. A reader inside the field should discount accordingly.</li>
+  </ul>
+</section>
+
+<footer>
+  <p><b>Sources.</b> The donor study that opens this analysis is <a href="https://future-matters.org/updates/legibility-in-the-coming-wave-anonymous-philanthropists-barriers-to-funding-ai-governance">"Legibility in the coming wave," 4 August 2026</a>. Method, criteria, formula, the counterfactual definition of neglectedness, the caution against single-priority strategies and the domain-agnosticism claim: <a href="https://future-matters.org/updates/from-instinct-to-systematic-prioritisation-how-to-identify-policies-that-most-deserve-your-effort/">"From instinct to systematic prioritisation," 6 March 2026</a>. Field facts: <a href="https://demandprogress.org/wp-content/uploads/2026/06/AI-Preemption.pdf">the June 2026 anti-preemption letter and its signatories</a>; <a href="https://www.techpolicy.press/unpacking-the-great-american-artificial-intelligence-act-of-2026/">the Great American AI Act discussion draft, 4 June 2026</a>; <a href="https://www.transformernews.ai/p/alex-bores-defeat-micah-lasher-ai-leading-the-future-public-first">the NY-12 primary result, 24 June 2026</a>; <a href="https://www.mcdermottlaw.com/insights/colorado-ai-law-in-flux-comprehensive-replacement-bill-signed-after-federal-court-blocks-predecessors-enforcement/">Colorado's repeal and replacement, 14 May 2026</a>; <a href="https://openai.com/index/hugging-face-incident-and-the-road-ahead/">the July 2026 agent incident and the independent review of it</a>; <a href="https://www.founderspledge.com/research/frontier-ai-grantmaking">Founders Pledge, "Our Frontier AI Grantmaking in the First Half of 2026," 17 June 2026</a>. The joint-output failure mode is from <a href="https://www.lesswrong.com/posts/EexsebbYhbe2gXkPP/the-current-bottleneck-is-political-will-not-research">Charbel-Rapha&euml;l Segerie, "The current bottleneck is political will, not research," 11 July 2026</a>. Figures are as reported by those sources on those dates and have not been re-verified since.</p>
+</footer>
+
+</div>
+</body>
+</html>
